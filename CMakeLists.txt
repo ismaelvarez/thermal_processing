@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
-  optris_driver
+  optris_drivers
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +106,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES thermal_processing
-   CATKIN_DEPENDS message_runtime roscpp rospy
+   CATKIN_DEPENDS optris_drivers
 #  DEPENDS system_lib
 )
 
