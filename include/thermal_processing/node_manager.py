@@ -2,7 +2,7 @@ import rospy
 from sensor_msgs.msg import Image
 from thermal_processing import features
 from thermal_processing import utils
-from thermal_processing.msg import ThermalInfo
+from gara_messages.msg import IRCameraTemperatureInfo
 from optris_drivers.msg import TemperatureScale
 
 MONO16_MAX_VALUE = 65535
@@ -22,7 +22,7 @@ def callback(data):
         # rospy.loginfo(rospy.get_caller_id() + 'maxLoc: %s; temp: %s ', position_max,
         #               features.get_temperature(max_value, TEMPERATURE.max, TEMPERATURE.min, MONO16_MAX_VALUE), )
         scale = rospy.wait_for_message('/optris/thermal_image_temperature_scale', TemperatureScale)
-        ir_info = ThermalInfo()
+        ir_info = IRCameraTemperatureInfo()
         ir_info.temperatureMax = features.get_temperature(max_value, scale.max, scale.min, MONO16_MAX_VALUE)
         ir_info.temperatureMin = features.get_temperature(min_value, scale.max, scale.min, MONO16_MAX_VALUE)
         ir_info.positionMax = position_max
@@ -33,7 +33,7 @@ def callback(data):
 def init_publishers():
     global IMAGE_PUBLISHER, TEMPERATURE_PUBLISHER
     IMAGE_PUBLISHER = rospy.Publisher('image_view', Image, queue_size=10)
-    TEMPERATURE_PUBLISHER = rospy.Publisher('temperature_info', ThermalInfo,
+    TEMPERATURE_PUBLISHER = rospy.Publisher('temperature_info', IRCameraTemperatureInfo,
                                             queue_size=10)
 
 
