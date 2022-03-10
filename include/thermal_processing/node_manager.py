@@ -1,42 +1,44 @@
 import rospy
 from sensor_msgs.msg import Image
-from std_msgs.msg import String
-from std_msgs.msg import Float32
 from thermal_processing import features
-from thermal_processing.msg import TempInfo
+from thermal_processing import utils
+from thermal_processing.msg import ThermalInfo
+from optris_drivers.msg import TemperatureScale
+
+MONO16_MAX_VALUE = 65535
 
 IMAGE_PUBLISHER = None
-DATA_PUBLISHER = None
-
-TEMPERATURE = None
-
-
-def set_temp(data):
-    global TEMPERATURE
-    TEMPERATURE = data
+TEMPERATURE_PUBLISHER = None
 
 
 def callback(data):
-    image, position, max_temperature = features.get_hottest_point(data)
+    position_max, max_value, position_min, min_value = features.get_min_max_point(data, rospy.get_param("~threshold"))
 
     if IMAGE_PUBLISHER:
-        IMAGE_PUBLISHER.publish(image)
+        IMAGE_PUBLISHER.publish(utils.draw_min_max_temp(data, position_max, position_min))
+        # IMAGE_PUBLISHER.publish(utils.draw(data, features.get_max_temp_area(data)))
 
-    if DATA_PUBLISHER and TEMPERATURE:
-        # rospy.loginfo(rospy.get_caller_id() + 'maxLoc: %s; temp: %s ', position,
-        #               features.get_temperature(max_temperature, TEMPERATURE.maxT, TEMPERATURE.minT, 65535), )
-        DATA_PUBLISHER.publish(features.get_temperature(max_temperature, TEMPERATURE.maxT, TEMPERATURE.minT, 65535))
+    if TEMPERATURE_PUBLISHER:
+        # rospy.loginfo(rospy.get_caller_id() + 'maxLoc: %s; temp: %s ', position_max,
+        #               features.get_temperature(max_value, TEMPERATURE.max, TEMPERATURE.min, MONO16_MAX_VALUE), )
+        scale = rospy.wait_for_message('/optris/thermal_image_temperature_scale', TemperatureScale)
+        ir_info = ThermalInfo()
+        ir_info.temperatureMax = features.get_temperature(max_value, scale.max, scale.min, MONO16_MAX_VALUE)
+        ir_info.temperatureMin = features.get_temperature(min_value, scale.max, scale.min, MONO16_MAX_VALUE)
+        ir_info.positionMax = position_max
+        ir_info.positionMin = position_min
+        TEMPERATURE_PUBLISHER.publish(ir_info)
 
 
 def init_publishers():
-    global IMAGE_PUBLISHER, DATA_PUBLISHER
-    IMAGE_PUBLISHER = rospy.Publisher('optris/thermal_camera_view_max', Image, queue_size=10)
-    DATA_PUBLISHER = rospy.Publisher('optris/thermal_info', Float32, queue_size=10)
+    global IMAGE_PUBLISHER, TEMPERATURE_PUBLISHER
+    IMAGE_PUBLISHER = rospy.Publisher('image_view', Image, queue_size=10)
+    TEMPERATURE_PUBLISHER = rospy.Publisher('temperature_info', ThermalInfo,
+                                            queue_size=10)
 
 
 def init_subscribers():
-    rospy.Subscriber('optris/image_raw', Image, callback)
-    rospy.Subscriber('optris/test', TempInfo, set_temp)
+    rospy.Subscriber('/optris/image_raw', Image, callback)
 
 
 def init():

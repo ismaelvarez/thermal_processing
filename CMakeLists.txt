@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  optris_driver
 )
 
 ## System dependencies are found with CMake's conventions
@@ -50,7 +51,7 @@ catkin_python_setup()
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  TempInfo.msg
+  ThermalInfo.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+<group ns="thermal">
+
+  <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen">
+    <!-- Set configuration file of your camera here! -->
+    <param name="threshold"  type="double" value="30000"/>
+  </node>
+
+</group>
+</launch>
