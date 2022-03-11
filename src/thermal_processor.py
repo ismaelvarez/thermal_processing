@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from thermal_processing import node_manager
 
 node_manager.init()
