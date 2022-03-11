@@ -21,7 +21,7 @@ def callback(data):
     if TEMPERATURE_PUBLISHER:
         # rospy.loginfo(rospy.get_caller_id() + 'maxLoc: %s; temp: %s ', position_max,
         #               features.get_temperature(max_value, TEMPERATURE.max, TEMPERATURE.min, MONO16_MAX_VALUE), )
-        scale = rospy.wait_for_message('/optris/thermal_image_temperature_scale', TemperatureScale)
+        scale = rospy.wait_for_message('thermal_image_temperature_scale', TemperatureScale)
         ir_info = IRCameraTemperatureInfo()
         ir_info.temperatureMax = features.get_temperature(max_value, scale.max, scale.min, MONO16_MAX_VALUE)
         ir_info.temperatureMin = features.get_temperature(min_value, scale.max, scale.min, MONO16_MAX_VALUE)
@@ -38,7 +38,7 @@ def init_publishers():
 
 
 def init_subscribers():
-    rospy.Subscriber('/optris/image_raw', Image, callback)
+    rospy.Subscriber('image_raw', Image, callback)
 
 
 def init():
