@@ -10,15 +10,23 @@ MONO16_MAX_VALUE = 65535
 IMAGE_PUBLISHER = None
 TEMPERATURE_PUBLISHER = None
 
+AREA_MODE ="area"
+POINT_MODE = "point"
+
 TEMPERATURE_CALCULATION_MODE = "area"
 
 
 def callback(data):
     scale = rospy.wait_for_message('thermal_image_temperature_scale', TemperatureScale)
-    position_max, max_value, position_min, min_value = \
-        features.calculate_temperature_by_areas(data, rospy.get_param('~max_threshold'),
-                                                rospy.get_param('~min_threshold'))
 
+    if TEMPERATURE_CALCULATION_MODE == AREA_MODE:
+        position_max, max_value, position_min, min_value = \
+            features.calculate_temperature_by_areas(data, rospy.get_param('~max_threshold'),
+                                                    rospy.get_param('~min_threshold'))
+
+    if TEMPERATURE_CALCULATION_MODE == POINT_MODE:
+        position_max, max_value, position_min, min_value = features.get_min_max_point(data)
+        
     if IMAGE_PUBLISHER:
         IMAGE_PUBLISHER.publish(utils.draw_min_max_temp(data, position_max, position_min))
         # IMAGE_PUBLISHER.publish(utils.draw(data, features.get_max_temp_area(data)))

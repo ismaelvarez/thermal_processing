@@ -2,11 +2,11 @@
 <launch>
 <group ns="gara_infrared_camera">
 
-  <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen" args="$(arg mode) $(arg max_threshold) $(arg min_threshold)" >
+  <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen">
     <!-- Set configuration file of your camera here! -->
-    <param name="mode"  type="string" value="$(arg mode)" default="point"/>
-    <param name="max_threshold"  type="double" value="$(arg max_threshold)" default="200"/>
-    <param name="min_threshold"  type="double" value="$(arg min_threshold)" default="40"/>
+    <param name="mode"  type="str" value="point"/>
+    <param name="max_threshold"  type="int" value="200"/>
+    <param name="min_threshold"  type="int" value="40"/>
   </node>
 
 </group>
