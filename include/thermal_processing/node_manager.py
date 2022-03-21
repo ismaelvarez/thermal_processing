@@ -15,14 +15,17 @@ POINT_MODE = "point"
 
 TEMPERATURE_CALCULATION_MODE = "area"
 
+MODE = ""
+MAX_THRESHOLD = 0
+MIN_THRESHOLD = 0
+
 
 def callback(data):
     scale = rospy.wait_for_message('thermal_image_temperature_scale', TemperatureScale)
 
     if TEMPERATURE_CALCULATION_MODE == AREA_MODE:
         position_max, max_value, position_min, min_value = \
-            features.calculate_temperature_by_areas(data, rospy.get_param('~max_threshold'),
-                                                    rospy.get_param('~min_threshold'))
+            features.calculate_temperature_by_areas(data, MAX_THRESHOLD, MIN_THRESHOLD)
 
     if TEMPERATURE_CALCULATION_MODE == POINT_MODE:
         position_max, max_value, position_min, min_value = features.get_min_max_point(data)
@@ -55,14 +58,22 @@ def init_subscribers():
 
 def init():
     global TEMPERATURE_CALCULATION_MODE
+    global MAX_THRESHOLD
+    global MIN_THRESHOLD
     # In ROS, nodes are uniquely named. If two nodes with the same
     # name are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('thermal-processing', anonymous=True)
-
-    TEMPERATURE_CALCULATION_MODE = rospy.get_param('~mode')
+    try:
+        TEMPERATURE_CALCULATION_MODE = rospy.get_param('~mode')
+        MAX_THRESHOLD = rospy.get_param('~max_threshold')
+        MIN_THRESHOLD = rospy.get_param('~min_threshold')
+    except Exception:
+        TEMPERATURE_CALCULATION_MODE = "area"
+        MAX_THRESHOLD = 200
+        MIN_THRESHOLD = 40
 
     init_publishers()
     init_subscribers()
