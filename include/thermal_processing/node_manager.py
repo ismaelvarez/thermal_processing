@@ -10,7 +10,7 @@ MONO16_MAX_VALUE = 65535
 IMAGE_PUBLISHER = None
 TEMPERATURE_PUBLISHER = None
 
-AREA_MODE ="area"
+AREA_MODE = "area"
 POINT_MODE = "point"
 
 TEMPERATURE_CALCULATION_MODE = "area"
@@ -71,7 +71,7 @@ def init():
         MAX_THRESHOLD = rospy.get_param('~max_threshold')
         MIN_THRESHOLD = rospy.get_param('~min_threshold')
     except Exception:
-        TEMPERATURE_CALCULATION_MODE = "area"
+        TEMPERATURE_CALCULATION_MODE = "point"
         MAX_THRESHOLD = 200
         MIN_THRESHOLD = 40
 

@@ -17,13 +17,12 @@ def calculate_mean_of_contours(image, mask):
     means = []
     positions = []
     for contour in contours:
-        _, radius = cv2.minEnclosingCircle(contour)
-        if radius > 10:
-            mask_ = np.zeros(image.shape, dtype=np.uint8)
-            cv2.fillPoly(mask_, pts=[contour], color=(255, 255, 255))
-            means.append(cv2.mean(image, mask_)[0])
-            M = cv2.moments(contour)
-            positions.append([int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])])
+        mask_ = np.zeros(image.shape, dtype=np.uint8)
+        cv2.fillPoly(mask_, pts=[contour], color=(255, 255, 255))
+        means.append(cv2.mean(image, mask_)[0])
+        M = cv2.moments(contour)
+        print(M['m00'])
+        positions.append([int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])])
     return means, positions
 
 
