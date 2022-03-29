@@ -53,27 +53,45 @@ def init_publishers():
 
 
 def init_subscribers():
-    rospy.Subscriber('image_raw', Image, callback)
+    rospy.Subscriber('image_rect_color', Image, callback)
 
 
-def init():
+def set_params():
     global TEMPERATURE_CALCULATION_MODE
     global MAX_THRESHOLD
     global MIN_THRESHOLD
+
+    try:
+        TEMPERATURE_CALCULATION_MODE = rospy.get_param('~mode')
+    except Exception:
+        rospy.loginfo(rospy.get_caller_id() + ': Exception')
+        TEMPERATURE_CALCULATION_MODE = "point"
+
+    rospy.loginfo(rospy.get_caller_id() + ': Mode=%s' % TEMPERATURE_CALCULATION_MODE)
+    try:
+        MAX_THRESHOLD = rospy.get_param('~max_threshold')
+    except Exception:
+        MAX_THRESHOLD = 200
+
+    rospy.loginfo(rospy.get_caller_id() + ': Max Threshold=%s' % MAX_THRESHOLD)
+
+    try:
+        MIN_THRESHOLD = rospy.get_param('~min_threshold')
+    except Exception:
+        MIN_THRESHOLD = 40
+
+    rospy.loginfo(rospy.get_caller_id() + ': Min Threshold=%s' % MIN_THRESHOLD)
+
+
+def init():
     # In ROS, nodes are uniquely named. If two nodes with the same
     # name are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
-    rospy.init_node('thermal-processing', anonymous=True)
-    try:
-        TEMPERATURE_CALCULATION_MODE = rospy.get_param('~mode')
-        MAX_THRESHOLD = rospy.get_param('~max_threshold')
-        MIN_THRESHOLD = rospy.get_param('~min_threshold')
-    except Exception:
-        TEMPERATURE_CALCULATION_MODE = "point"
-        MAX_THRESHOLD = 200
-        MIN_THRESHOLD = 40
+    rospy.init_node('thermal_processing', anonymous=True)
+
+    set_params()
 
     init_publishers()
     init_subscribers()
