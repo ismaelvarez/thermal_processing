@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 <group ns="gara">
-
-  <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen">
-    <!-- Set configuration file of your camera here! -->
-    <param name="mode"  type="str" value="point"/>
-    <param name="max_threshold"  type="int" value="200"/>
-    <param name="min_threshold"  type="int" value="40"/>
-  </node>
-
+    <group ns="infrared_camera">
+    <group ns="processing">
+      <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen">
+        <!-- Set configuration file of your camera here! -->
+        <param name="mode"  type="str" value="point"/>
+        <param name="temperatureScaleTopic" type="str" value="/gara/infrared_camera/thermal_image_temperature_scale"/>
+        <param name="thermalImageTopic" type="str" value="/gara/infrared_camera/image_rect_color"/>
+        <param name="max_threshold"  type="int" value="200"/>
+        <param name="min_threshold"  type="int" value="40"/>
+      </node>
+    </group>
+    </group>
 </group>
 </launch>

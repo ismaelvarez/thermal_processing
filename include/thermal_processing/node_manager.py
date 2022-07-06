@@ -20,7 +20,7 @@ MIN_THRESHOLD = 0
 
 
 def callback(data):
-    scale = rospy.wait_for_message('/gara/infrared_camera/temperature_scale', TemperatureScale)
+    scale = rospy.wait_for_message(rospy.get_param('~temperatureScaleTopic'), TemperatureScale)
 
     if TEMPERATURE_CALCULATION_MODE == AREA_MODE:
         position_max, max_value, position_min, min_value = \
@@ -52,7 +52,8 @@ def init_publishers():
 
 
 def init_subscribers():
-    rospy.Subscriber('image_rect_color', Image, callback)
+    rospy.loginfo(rospy.get_param('~thermalImageTopic'))
+    rospy.Subscriber(rospy.get_param('~thermalImageTopic'), Image, callback)
 
 
 def set_params():
