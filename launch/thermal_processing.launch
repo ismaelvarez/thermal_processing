@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-<group ns="gara_infrared_camera">
+<group ns="gara">
 
   <node name="thermal_processing" pkg="thermal_processing" type="thermal_processor.py" output="screen">
     <!-- Set configuration file of your camera here! -->

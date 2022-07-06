@@ -12,13 +12,15 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
-  optris_drivers
   gara_messages
+  roslaunch
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+
+roslaunch_add_file_check(launch)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -107,7 +109,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES thermal_processing
-   CATKIN_DEPENDS optris_drivers
+#   CATKIN_DEPENDS optris_drivers
 #  DEPENDS system_lib
 )
 

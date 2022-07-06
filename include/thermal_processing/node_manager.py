@@ -2,8 +2,7 @@ import rospy
 from sensor_msgs.msg import Image
 from thermal_processing import features
 from thermal_processing import utils
-from gara_messages.msg import IRCameraTemperatureInfo
-from optris_drivers.msg import TemperatureScale
+from gara_messages.msg import IRCameraTemperatureInfo, TemperatureScale
 
 MONO16_MAX_VALUE = 65535
 
@@ -21,7 +20,7 @@ MIN_THRESHOLD = 0
 
 
 def callback(data):
-    scale = rospy.wait_for_message('thermal_image_temperature_scale', TemperatureScale)
+    scale = rospy.wait_for_message('/gara/infrared_camera/temperature_scale', TemperatureScale)
 
     if TEMPERATURE_CALCULATION_MODE == AREA_MODE:
         position_max, max_value, position_min, min_value = \
